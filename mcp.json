@@ -1,0 +1,105 @@
+{
+    "mcpServers": {
+        "testrail_test_generator": {
+            "description": "Generates TestRail test cases from Jira tickets",
+            "host": "localhost",
+            "port": 5000,
+            "endpoints": [
+                {
+                    "path": "/webhook/jira",
+                    "method": "POST",
+                    "description": "Webhook endpoint for Jira ticket events",
+                    "parameters": {
+                        "issue": {
+                            "type": "object",
+                            "properties": {
+                                "key": {
+                                    "type": "string",
+                                    "description": "Jira issue key (e.g., PROJ-123)"
+                                },
+                                "fields": {
+                                    "type": "object",
+                                    "properties": {
+                                        "summary": {
+                                            "type": "string",
+                                            "description": "Issue summary"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "description": "Issue description"
+                                        },
+                                        "issuetype": {
+                                            "type": "object",
+                                            "properties": {
+                                                "name": {
+                                                    "type": "string",
+                                                    "description": "Issue type (Story/Bug/Task)"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "returns": {
+                        "type": "object",
+                        "properties": {
+                            "status": {
+                                "type": "string",
+                                "description": "Operation status (success/error)"
+                            },
+                            "issue_key": {
+                                "type": "string",
+                                "description": "Processed Jira issue key"
+                            },
+                            "test_cases_created": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "test_case_id": {
+                                            "type": "integer",
+                                            "description": "Created TestRail test case ID"
+                                        },
+                                        "title": {
+                                            "type": "string",
+                                            "description": "Test case title"
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "description": "Creation status"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "path": "/health",
+                    "method": "GET",
+                    "description": "Health check endpoint",
+                    "returns": {
+                        "type": "object",
+                        "properties": {
+                            "status": {
+                                "type": "string",
+                                "description": "Server health status"
+                            }
+                        }
+                    }
+                }
+            ],
+            "startup": {
+                "command": "python -m src.mcp_server.server",
+                "cwd": "${workspaceRoot}",
+                "environment": {
+                    "FLASK_ENV": "development",
+                    "FLASK_DEBUG": "1",
+                    "PYTHONPATH": "${workspaceRoot}"
+                }
+            }
+        }
+    }
+} 

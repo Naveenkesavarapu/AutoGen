@@ -1,0 +1,19 @@
+# Jira Configuration
+JIRA_URL=https://zenoti.atlassian.net
+JIRA_USERNAME=naveenk@zenoti.com
+JIRA_TOKEN=ATATT3xFfGF0nl8ARPhSNGq4c8RB6LoN-TG8yeLh4CkZvqUgom7-Go10w83XCSQuLvJoXW4X01KlECWXcWi0iK3Nn-S4suAIMiQK3oQsnRcYOV4fmSnFdcaZmdscNVhWxUbn81v4PoAjY32_gD0WSQIE90CWr9ZmEE7o7BKgMkUPgpjT5RURNyA=BEE7D37B
+
+# TestRail Configuration
+TESTRAIL_URL=https://zenoti.testrail.io
+TESTRAIL_EMAIL=naveenk@zenoti.com
+TESTRAIL_TOKEN=YTOv9QN3Z9wx.s9rHKSy-cWXtwRvYLHp13jv6SISl
+TESTRAIL_DEFAULT_SECTION_ID=1
+
+# OpenAI Configuration
+OPENAI_API_KEY=your-openai-api-key
+
+# Server Configuration
+FLASK_ENV=development
+FLASK_DEBUG=1
+PORT=5000
+HOST=0.0.0.0
