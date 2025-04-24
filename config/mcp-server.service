@@ -1,0 +1,37 @@
+[Unit]
+Description=AutoGen MCP Server
+After=network.target
+Wants=network-online.target
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=autogen
+Group=autogen
+WorkingDirectory=/opt/AutoGen
+Environment="PATH=/opt/AutoGen/venv/bin"
+Environment="PYTHONPATH=/opt/AutoGen"
+EnvironmentFile=/opt/AutoGen/.env
+
+ExecStart=/opt/AutoGen/venv/bin/gunicorn \
+    --workers 3 \
+    --bind 0.0.0.0:5000 \
+    --timeout 120 \
+    --access-logfile /var/log/autogen/access.log \
+    --error-logfile /var/log/autogen/error.log \
+    "src.mcp_server.server:app"
+
+# Restart configuration
+Restart=always
+RestartSec=5s
+TimeoutStopSec=30
+
+# Security settings
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+ProtectHome=yes
+
+[Install]
+WantedBy=multi-user.target 

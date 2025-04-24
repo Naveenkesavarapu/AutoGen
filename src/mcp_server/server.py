@@ -8,12 +8,25 @@ import os
 import json
 import tempfile
 import subprocess
+import sys
+from pathlib import Path
+
+# Add the parent directory (src) to Python path
+current_dir = Path(__file__).resolve().parent
+src_dir = current_dir.parent
+if str(src_dir) not in sys.path:
+    sys.path.insert(0, str(src_dir))
+
 from .jira_client import JiraClient
 from .testrail_client import TestRailClient
 from .test_generator import TestCaseGenerator
+from flask_cors import CORS
 
 # Configure logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
 logger = logging.getLogger(__name__)
 
 # Load environment variables
@@ -26,6 +39,7 @@ else:
 
 # Initialize Flask app
 app = Flask(__name__)
+CORS(app)
 
 # Initialize clients with default values for development
 try:
@@ -57,9 +71,9 @@ except Exception as e:
     logger.error(f"Failed to initialize Test Generator: {str(e)}")
     test_generator = None
 
-@app.route('/health')
+@app.route('/health', methods=['GET'])
 def health_check():
-    """Health check endpoint."""
+    """Health check endpoint"""
     status = {
         'status': 'healthy',
         'environment': os.getenv('FLASK_ENV', 'development'),
@@ -78,7 +92,24 @@ def health_check():
             }
         }
     }
-    return jsonify(status)
+    return jsonify(status), 200
+
+@app.route('/api/process', methods=['POST'])
+def process_request():
+    """Main processing endpoint"""
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({"error": "No data provided"}), 400
+
+        # Process the request (implement your logic here)
+        result = {"status": "success", "message": "Request processed successfully"}
+        
+        return jsonify(result), 200
+
+    except Exception as e:
+        logger.error(f"Error processing request: {str(e)}")
+        return jsonify({"error": "Internal server error"}), 500
 
 @app.route('/jira/ticket/<ticket_id>')
 def get_ticket_details(ticket_id):
@@ -340,9 +371,18 @@ def handle_jira_webhook():
         logger.error(f"Error processing webhook: {str(e)}", exc_info=True)
         return jsonify({'error': str(e)}), 500
 
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({"error": "Not found"}), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    return jsonify({"error": "Internal server error"}), 500
+
 def start_server(host='0.0.0.0', port=5000):
     """Start the Flask server."""
     app.run(host=host, port=port, debug=True)
 
 if __name__ == '__main__':
-    start_server() 
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port) 

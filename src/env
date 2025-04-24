@@ -9,8 +9,18 @@ TESTRAIL_EMAIL=naveenk@zenoti.com
 TESTRAIL_TOKEN=YTOv9QN3Z9wx.s9rHKSy-cWXtwRvYLHp13jv6SISl
 TESTRAIL_DEFAULT_SECTION_ID=1
 
-# OpenAI Configuration
-OPENAI_API_KEY=your-openai-api-key
+# Bitbucket Configuration
+BITBUCKET_URL=https://api.bitbucket.org
+BITBUCKET_ORG=zenotiengineeringteam
+BITBUCKET_REPO=maindbsql
+# Generate token from: https://bitbucket.org/account/settings/app-passwords/
+BITBUCKET_TOKEN=ATBB8gndVmbMj3prjcGrrHnsDHS72E79BB7F
+
+
+# Cursor MCP Server Configuration
+MCP_URL=http://localhost:5000
+MCP_WORKSPACE_ROOT=/c/Users/naveenk/Automation-Zenoti/AutoGen
+MCP_TEST_OUTPUT_DIR=tests/generated
 
 # Server Configuration
 FLASK_ENV=development
